@@ -12,3 +12,6 @@ venv/
 
 #VsCode
 *workspace*
+
+#SQL
+*.db
