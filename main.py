@@ -1,11 +1,11 @@
 import sqlite3
-from bottle import route, run, template
+from bottle import route, run, template, static_file
 
 @route('/todo')
 def todo_list():
     conn = sqlite3.connect('todo.db')
     c = conn.cursor()
-    c.execute("SELECT id, task FROM todo WHERE status LIKE '1'")
+    c.execute("SELECT * FROM todo")
     result = c.fetchall()
     c.close()
     output = template('make_table', rows=result)
