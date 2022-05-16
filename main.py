@@ -1,6 +1,18 @@
 import sqlite3
 from bottle import route, get, post, run, template, request, redirect
 
+
+@get('/')
+def get_index_tpl():
+    conn = sqlite3.connect('todo.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM todo")
+    result = c.fetchall()
+    c.close()
+    output = template('index', rows=result)
+    return output
+
+
 @route('/todo')
 def todo_list():
     conn = sqlite3.connect('todo.db')
@@ -13,7 +25,7 @@ def todo_list():
 
 
 @route('/new')
-def new_item_form():
+def new_todo_form():
     return template('new_task')
 
 
@@ -30,11 +42,11 @@ def new_todo_save():
         conn.commit()
         c.close()
         # se muestra el resultado de la operación
-        return redirect('/todo')
+    return redirect('/')
 
 
 @get('/edit/<no:int>')
-def edit_item_form(no):
+def edit_todo_form(no):
     conn = sqlite3.connect('todo.db')
     c = conn.cursor()
     c.execute("SELECT task FROM todo WHERE id = ?", str(no))
@@ -43,7 +55,7 @@ def edit_item_form(no):
 
 
 @post('/edit/<no:int>')
-def edit_item(no):
+def edit_todo(no):
     if request.POST.save:
         edit = request.POST.task.strip()
         status = request.POST.status.strip()
@@ -58,11 +70,11 @@ def edit_item(no):
         c.execute("UPDATE todo SET task = ?, status = ? WHERE id LIKE ?", (edit, status, no))
         conn.commit()
 
-        return redirect('/todo')
+        return redirect('/edit/<no:int>')
 
 
 @get('/delete/<no:int>')
-def delete_item(no):
+def delete_todo_form(no):
     conn = sqlite3.connect('todo.db')
     c = conn.cursor()
     c.execute("SELECT task FROM todo WHERE id LIKE ?", (str(no),))
@@ -72,7 +84,7 @@ def delete_item(no):
 
 
 @post('/delete/<no:int>')
-def delete_item(no):
+def delete_todo(no):
     if request.POST.delete:
         conn = sqlite3.connect('todo.db')
         c = conn.cursor()
