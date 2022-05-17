@@ -29,12 +29,14 @@
                             %else:
                             <td style="padding: 1em;">{{row[i]}}</td>
                             %end
-                        %else:
+                        %elif i == 2:
                             %if row[2] == 0:
                             <td style="padding: 1em;">Finalizada</td>
                             %else:
                             <td style="padding: 1em;">Pendiente</td>
                             %end
+                        %else:
+                            <td style="padding: 1em;">{{row[i]}}</td>
                         %end
                     %end
                     <form action="/edit/{{row[0]}}" method="GET">
