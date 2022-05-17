@@ -18,28 +18,40 @@
                 <th>Id</th>
                 <th>Tarea</th>
                 <th>Estado</th>
-                <th colspan="2">Acciones</th>
+                <th colspan="3">Acciones</th>
             </tr>
             %for row in rows:
-            %print(row[0])
                 <tr>
                     %for i in range(len(row)):
-                        %if i == 2:
-                            %if row[i] == 0:
-                                <td style="padding: 1em;">Finalizada</td>
+                        %if i == 1: 
+                            %if row[2] == 0:
+                            <td style="padding: 1em; text-decoration: line-through;">{{row[i]}}</td>
                             %else:
-                                <td style="padding: 1em;">Pendiente</td>
+                            <td style="padding: 1em;">{{row[i]}}</td>
                             %end
                         %else:
-                        <td style="padding: 1em;">{{row[i]}}</td>
+                            %if row[2] == 0:
+                            <td style="padding: 1em;">Finalizada</td>
+                            %else:
+                            <td style="padding: 1em;">Pendiente</td>
+                            %end
                         %end
                     %end
-                    <form action="/edit/{{row[0]}}" method="POST">
+                    <form action="/edit/{{row[0]}}" method="GET">
                         <td style="padding: .5em;"><input type="submit" name="edit" value="Editar"/></td>
                     </form>
                     <form action="/delete/{{row[0]}}" method="POST">
                         <td style="padding: .5em;"><input type="submit" name="delete" value="Borrar"/></td>
                     </form>
+                    %if row[2] == 0:
+                    <form action="/changestate/{{row[0]}}" method="POST">
+                        <td style="padding: .5em;"><input type="submit" name="change" value="Abrir"/></td>
+                    </form>
+                    %else:
+                    <form action="/changestate/{{row[0]}}" method="POST">
+                        <td style="padding: .5em;"><input type="submit" name="change" value="Finalizar"/></td>
+                    </form>
+                    %end
                 </tr>
             %end
         </table>

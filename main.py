@@ -45,7 +45,6 @@ def new_todo_save():
 
 
 @get('/edit/<no:int>')
-@get('/')
 def edit_todo_form(no):
     conn = sqlite3.connect('todo.db')
     c = conn.cursor()
@@ -70,7 +69,7 @@ def edit_todo_form(no):
         c.execute("UPDATE todo SET task = ?, status = ? WHERE id LIKE ?", (edit, status, no))
         conn.commit()
 
-        return redirect('/edit/<no:int>')
+        return redirect('/')
 
 
 @get('/delete/<no:int>')
@@ -93,6 +92,24 @@ def delete_todo(no):
         c.close()
 
     return redirect('/')
+
+
+@post('/changestate/<no:int>')
+def change_state_todo_form(no):
+    if request.POST.change:
+        status = request.POST.change.strip()
+
+        if status == 'Abrir':
+            status = 1
+        else:
+            status = 0
+
+        conn = sqlite3.connect('todo.db')
+        c = conn.cursor()
+        c.execute("UPDATE todo SET status = ? WHERE id LIKE ?", (status, no))
+        conn.commit()
+
+        return redirect('/')
 
 
 if __name__ == '__main__':
