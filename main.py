@@ -1,7 +1,6 @@
 import sqlite3
 from bottle import route, get, post, run, template, request, redirect
 
-
 @get('/')
 def get_index_tpl():
     conn = sqlite3.connect('todo.db')
@@ -46,6 +45,7 @@ def new_todo_save():
 
 
 @get('/edit/<no:int>')
+@get('/')
 def edit_todo_form(no):
     conn = sqlite3.connect('todo.db')
     c = conn.cursor()
@@ -55,7 +55,7 @@ def edit_todo_form(no):
 
 
 @post('/edit/<no:int>')
-def edit_todo(no):
+def edit_todo_form(no):
     if request.POST.save:
         edit = request.POST.task.strip()
         status = request.POST.status.strip()
@@ -92,7 +92,7 @@ def delete_todo(no):
         conn.commit()
         c.close()
 
-    return redirect('/todo')
+    return redirect('/')
 
 
 if __name__ == '__main__':
